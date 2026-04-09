@@ -13,7 +13,7 @@ public class Dinosaur
     public DateTime RegistrationDate { get; set; } = DateTime.Now;
     public int ZoneId { get; set; }
     
-    public Zone Zone { get; set; }
+    public Zone Zone { get; set; } = null!;
 }
 
 
