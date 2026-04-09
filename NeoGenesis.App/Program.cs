@@ -8,7 +8,7 @@ var db = new AppDbContext();
 db.Database.Migrate();
 
 var repo = new DinosaurRepository(db);
-var service = new DinosaurService(repo);
+var service = new DInosaurService(repo);
 var menu = new MainMenu(service);
 
 menu.Show();
