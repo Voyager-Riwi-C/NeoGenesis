@@ -14,8 +14,8 @@ public class InsertMenu
     {
         ConsoleHelper.ShowTitle("Register New Dinosaur");
 
-        var name             = ConsoleHelper.AskInput("Dinosaur name");
-        var species          = ConsoleHelper.AskInput("Species");
+        var name = ConsoleHelper.AskInput("Dinosaur name");
+        var species = ConsoleHelper.AskInput("Species");
         var registrationCode = ConsoleHelper.AskInput("Registration Code");
 
         var (isValid, error) = _service.ValidateNewDinosaur(name, species, registrationCode);
@@ -53,10 +53,17 @@ public class InsertMenu
             TrackingDevice   = trackingDevice,
             Location         = location,
             ZoneId           = zoneId,
-            RegistrationDate = DateTime.Now
+            RegistrationDate = DateTime.UtcNow 
         };
+        
+        if (!ConsoleHelper.Confirm($"Register dinosaur '{name}'?"))
+        {
+            ConsoleHelper.ShowWarning("Registration cancelled.");
+            ConsoleHelper.Pause();
+            return;
+        }
 
-        // TODO: llamar _service.Add(dinosaur) cuando este el repo check 
+        _service.Add(dinosaur);
         ConsoleHelper.ShowSuccess($"Dinosaur '{name}' registered successfully.");
         ConsoleHelper.Pause();
     }

@@ -12,21 +12,29 @@ public class UpdateMenu
 
     public void Show()
     {
-        ConsoleHelper.ShowTitle("Registrar Nuevo Dinosaurio");
+        ConsoleHelper.ShowTitle("Update Dinosaur");
 
-        var name             = ConsoleHelper.AskInput("Nombre del dinosaurio");
-        var species          = ConsoleHelper.AskInput("Especie");
-        var registrationCode = ConsoleHelper.AskInput("Código de registro");
-
-        var (isValid, error) = _service.ValidateNewDinosaur(name, species, registrationCode);
-        if (!isValid)
+        Console.Write("  Dinosaur ID to update: ");
+        if (!int.TryParse(Console.ReadLine(), out int id))
         {
-            ConsoleHelper.ShowError(error);
+            ConsoleHelper.ShowError("Invalid ID.");
             ConsoleHelper.Pause();
             return;
         }
-
-        var ageInput = ConsoleHelper.AskInput("Edad");
+        
+        var dinosaur = _service.GetById(id);
+        if (dinosaur == null)
+        {
+            ConsoleHelper.ShowError("Dinosaur not found.");
+            ConsoleHelper.Pause();
+            return;
+        }
+        
+        Console.WriteLine($"  Current name: {dinosaur.Name}");
+        var name = ConsoleHelper.AskInput("New name");
+        Console.WriteLine($"  Current species: {dinosaur.Species}");
+        var species = ConsoleHelper.AskInput("New species");
+        var ageInput = ConsoleHelper.AskInput("New age");
         var (ageValid, ageError) = _service.ValidateAge(ageInput, out int age);
         if (!ageValid)
         {
@@ -34,30 +42,20 @@ public class UpdateMenu
             ConsoleHelper.Pause();
             return;
         }
-
-        var dietType       = ConsoleHelper.AskOptional("Tipo de dieta (Carnívoro/Herbívoro)");
-        var trackingDevice = ConsoleHelper.AskOptional("Dispositivo de rastreo");
-        var location       = ConsoleHelper.AskOptional("Ubicación");
-
-        // TODO: pedir ZoneId cuando tengamos el listado de zonas disponibles
-        Console.Write("  ID de zona: ");
-        int.TryParse(Console.ReadLine(), out int zoneId);
-
-        var dinosaur = new Dinosaur
+        
+        dinosaur.Name    = name;
+        dinosaur.Species = species;
+        dinosaur.Age     = age;
+        
+        if (!ConsoleHelper.Confirm($"Save changes for '{dinosaur.Name}'?"))
         {
-            Name             = name,
-            Species          = species,
-            RegistrationCode = registrationCode,
-            Age              = age,
-            DietType         = dietType,
-            TrackingDevice   = trackingDevice,
-            Location         = location,
-            ZoneId           = zoneId,
-            RegistrationDate = DateTime.Now
-        };
+            ConsoleHelper.ShowWarning("Update cancelled.");
+            ConsoleHelper.Pause();
+            return;
+        }
 
-        // TODO: llamar _service.Add(dinosaur) cuando conectes repo completo
-        ConsoleHelper.ShowSuccess($"Dinosaurio '{name}' registrado correctamente.");
+        _service.Update(dinosaur);
+        ConsoleHelper.ShowSuccess($"Dinosaur '{name}' updated successfully.");
         ConsoleHelper.Pause();
     }
 }

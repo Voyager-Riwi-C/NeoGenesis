@@ -5,7 +5,19 @@ namespace NeoGenesis.App.Services;
 
 public class DinosaurService
 {
-    // TODO: connect repository
+    private readonly DinosaurRepository _repository;
+
+    public DinosaurService(DinosaurRepository repository)
+    {
+        _repository = repository;
+    }
+
+    // CRUD FROM REPOSITORIES
+    public List<Dinosaur> GetAll()    => _repository.GetAll();
+    public Dinosaur? GetById(int id)  => _repository.GetById(id);
+    public void Add(Dinosaur d)       => _repository.Add(d);
+    public void Update(Dinosaur d)    => _repository.Update(d);
+    public void Delete(int id)        => _repository.Delete(id);
 
     // Validations
 

@@ -12,52 +12,35 @@ public class DeleteMenu
 
     public void Show()
     {
-        ConsoleHelper.ShowTitle("Registrar Nuevo Dinosaurio");
-
-        var name             = ConsoleHelper.AskInput("Nombre del dinosaurio");
-        var species          = ConsoleHelper.AskInput("Especie");
-        var registrationCode = ConsoleHelper.AskInput("Código de registro");
-
-        var (isValid, error) = _service.ValidateNewDinosaur(name, species, registrationCode);
-        if (!isValid)
+        ConsoleHelper.ShowTitle("Delete Dinosaur");
+        
+        Console.Write("  Dinosaur ID to delete: ");
+        if (!int.TryParse(Console.ReadLine(), out int id))
         {
-            ConsoleHelper.ShowError(error);
+            ConsoleHelper.ShowError("Invalid ID.");
             ConsoleHelper.Pause();
             return;
         }
-
-        var ageInput = ConsoleHelper.AskInput("Edad");
-        var (ageValid, ageError) = _service.ValidateAge(ageInput, out int age);
-        if (!ageValid)
+        
+        var dinosaur = _service.GetById(id);
+        if (dinosaur == null)
         {
-            ConsoleHelper.ShowError(ageError);
+            ConsoleHelper.ShowError("Dinosaur not found.");
             ConsoleHelper.Pause();
             return;
         }
-
-        var dietType       = ConsoleHelper.AskOptional("Tipo de dieta (Carnívoro/Herbívoro)");
-        var trackingDevice = ConsoleHelper.AskOptional("Dispositivo de rastreo");
-        var location       = ConsoleHelper.AskOptional("Ubicación");
-
-        // TODO: pedir ZoneId cuando tengamos el listado de zonas disponibles
-        Console.Write("  ID de zona: ");
-        int.TryParse(Console.ReadLine(), out int zoneId);
-
-        var dinosaur = new Dinosaur
+        
+        if (!ConsoleHelper.Confirm($"Are you sure you want to delete '{dinosaur.Name}'?"))
         {
-            Name             = name,
-            Species          = species,
-            RegistrationCode = registrationCode,
-            Age              = age,
-            DietType         = dietType,
-            TrackingDevice   = trackingDevice,
-            Location         = location,
-            ZoneId           = zoneId,
-            RegistrationDate = DateTime.Now
-        };
-
-        // TODO: llamar _service.Add(dinosaur) cuando conectes repo completo
-        ConsoleHelper.ShowSuccess($"Dinosaurio '{name}' registrado correctamente.");
+            ConsoleHelper.ShowError("Operation cancelled.");
+            ConsoleHelper.Pause();
+            return;
+        }
+        
+        _service.Delete(id);
+        ConsoleHelper.ShowSuccess($"Dinosaur '{dinosaur.Name}' deleted successfully.");
         ConsoleHelper.Pause();
     }
 }
+
+
