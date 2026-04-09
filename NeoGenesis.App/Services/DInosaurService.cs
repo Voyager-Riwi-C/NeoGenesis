@@ -12,32 +12,14 @@ public class DInosaurService
         repo = repository;
     }
 
-    // Validations
     public void Create(Dinosaur dinosaur)
     {
-        if (string.IsNullOrEmpty(dinosaur.FirstName))
-            throw new Exception("First name is required");
+        ValidateFields(dinosaur);
 
-        if (string.IsNullOrEmpty(dinosaur.Species))
-            throw new Exception("Species is required");
-
-        if (string.IsNullOrEmpty(dinosaur.Username))
-            throw new Exception("Username is required");
-
-        if (string.IsNullOrEmpty(dinosaur.Email))
-            throw new Exception("Email is required");
-
-        bool emailIsValid = ValidateEmailFormat(dinosaur.Email);
-        if (!emailIsValid)
-            throw new Exception("Email format is not valid");
-
-        // Check duplicates
-        bool emailExists = repo.EmailExists(dinosaur.Email);
-        if (emailExists)
+        if (repo.EmailExists(dinosaur.Email))
             throw new Exception("Email is already registered");
 
-        bool usernameExists = repo.UsernameExists(dinosaur.Username);
-        if (usernameExists)
+        if (repo.UsernameExists(dinosaur.Username))
             throw new Exception("Username is already in use");
 
         // Save
@@ -50,6 +32,25 @@ public class DInosaurService
         if (existing == null)
             throw new Exception("Dinosaur not found");
 
+        ValidateFields(dinosaur);
+
+        if (dinosaur.Email != existing.Email && repo.EmailExists(dinosaur.Email))
+            throw new Exception("Email is already registered");
+
+        if (dinosaur.Username != existing.Username && repo.UsernameExists(dinosaur.Username))
+            throw new Exception("Username is already in use");
+
+        // Update
+        existing.FirstName = dinosaur.FirstName;
+        existing.Species = dinosaur.Species;
+        existing.Username = dinosaur.Username;
+        existing.Email = dinosaur.Email;
+
+        repo.Update(existing);
+    }
+
+    private void ValidateFields(Dinosaur dinosaur)
+    {
         if (string.IsNullOrEmpty(dinosaur.FirstName))
             throw new Exception("First name is required");
 
@@ -62,45 +63,28 @@ public class DInosaurService
         if (string.IsNullOrEmpty(dinosaur.Email))
             throw new Exception("Email is required");
 
-        bool emailIsValid = ValidateEmailFormat(dinosaur.Email);
-        if (!emailIsValid)
+        if (!ValidateEmailFormat(dinosaur.Email))
             throw new Exception("Email format is not valid");
-
-        // Check duplicates (excluding current dinosaur)
-        if (dinosaur.Email != existing.Email)
-        {
-            bool emailExists = repo.EmailExists(dinosaur.Email);
-            if (emailExists)
-                throw new Exception("Email is already registered");
-        }
-
-        if (dinosaur.Username != existing.Username)
-        {
-            bool usernameExists = repo.UsernameExists(dinosaur.Username);
-            if (usernameExists)
-                throw new Exception("Username is already in use");
-        }
-
-        // Update
-        existing.FirstName = dinosaur.FirstName;
-        existing.Species = dinosaur.Species;
-        existing.Username = dinosaur.Username;
-        existing.Email = dinosaur.Email;
-
-        repo.Update(existing);
     }
 
     private bool ValidateEmailFormat(string email)
     {
-        if (!email.Contains("@"))
+        int atCount = 0;
+        int atPosition = -1;
+
+        for (int i = 0; i < email.Length; i++)
+        {
+            if (email[i] == '@')
+            {
+                atCount++;
+                atPosition = i;
+            }
+        }
+
+        if (atCount != 1)
             return false;
 
-        int atPosition = email.IndexOf("@");
-
-        if (atPosition == 0)
-            return false;
-
-        if (atPosition == email.Length - 1)
+        if (atPosition == 0 || atPosition == email.Length - 1)
             return false;
 
         return true;
