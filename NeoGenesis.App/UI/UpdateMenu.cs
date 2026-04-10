@@ -14,24 +14,15 @@ public class UpdateMenu
     {
         ConsoleHelper.ShowTitle("Update Dinosaur");
 
-        var name             = ConsoleHelper.AskInput("Dinosaur name");
-        var species          = ConsoleHelper.AskInput("Species");
-        var registrationCode = ConsoleHelper.AskInput("Registration code");
-
-        var ageInput = ConsoleHelper.AskInput("Age");
-        if (!int.TryParse(ageInput, out int age))
-        {
-            ConsoleHelper.ShowError("Invalid age");
-            ConsoleHelper.Pause();
-            return;
-        }
-
-        var dietType       = ConsoleHelper.AskOptional("Diet type (Carnivore/Herbivore)");
+        var dinoId            = ConsoleHelper.AskNonNegativeInt("Dinosaur ID to update");
+        var name              = ConsoleHelper.AskLettersOnly("Dinosaur name");
+        var species           = ConsoleHelper.AskLettersOnly("Species");
+        var registrationCode  = ConsoleHelper.AskRequired("Registration code");
+        var age               = ConsoleHelper.AskNonNegativeInt("Age");
+        var dietType          = ConsoleHelper.AskOptionalDiet("Diet type (Carnivore/Herbivore)");
         var trackingDevice = ConsoleHelper.AskOptional("Tracking device");
         var location       = ConsoleHelper.AskOptional("Location");
-
-        Console.Write("  Zone ID: ");
-        int.TryParse(Console.ReadLine(), out int zoneId);
+        var zoneId         = ConsoleHelper.AskNonNegativeInt("Zone ID");
 
         var dinosaur = new Dinosaur
         {
@@ -45,14 +36,6 @@ public class UpdateMenu
             ZoneId           = zoneId,
             RegistrationDate = DateTime.Now
         };
-
-        Console.Write("  Dinosaur ID to update: ");
-        if (!int.TryParse(Console.ReadLine(), out int dinoId))
-        {
-            ConsoleHelper.ShowError("Invalid ID");
-            ConsoleHelper.Pause();
-            return;
-        }
 
         try
         {

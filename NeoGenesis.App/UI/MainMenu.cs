@@ -15,6 +15,7 @@ public class MainMenu
         bool running = true;
         while (running)
         {
+            try { Console.Clear(); } catch { }
             Console.WriteLine("\n=== NeoGenesis Park ===");
             Console.WriteLine("  1. Register Dinosaur");
             Console.WriteLine("  2. View Dinosaurs");
