@@ -8,7 +8,10 @@ var db = new AppDbContext();
 db.Database.Migrate();
 
 var repo = new DinosaurRepository(db);
-var service = new DInosaurService(repo);
+var service = new DinosaurService(repo);
 var menu = new MainMenu(service);
 
 menu.Show();
+
+Console.WriteLine("NeoGenesis Park — System started...");
+try { Console.ReadKey(); } catch { }

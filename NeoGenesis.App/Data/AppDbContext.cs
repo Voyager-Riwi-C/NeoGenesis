@@ -1,7 +1,7 @@
-namespace NeoGenesis.App.Data;
-
 using Microsoft.EntityFrameworkCore;
 using NeoGenesis.App.Models;
+
+namespace NeoGenesis.App.Data;
 
 public class AppDbContext : DbContext
 {
