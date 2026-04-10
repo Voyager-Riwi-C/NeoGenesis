@@ -1119,11 +1119,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\ximen\\OneDrive\\Documents\\C-sharp\\Voyager1\\NeoGenesis\\NeoGenesis.App\\NeoGenesis.App.csproj",
+      "projectUniqueName": "C:\\Users\\ximen\\OneDrive\\Documents\\C-sharp\\Voyager1\\NeoGenesis\\NeoGenesis.App\\NeoGenesis.App.csproj",
       "projectName": "NeoGenesis.App",
-      "projectPath": "c:\\Users\\ximen\\OneDrive\\Documents\\C-sharp\\Voyager1\\NeoGenesis\\NeoGenesis.App\\NeoGenesis.App.csproj",
+      "projectPath": "C:\\Users\\ximen\\OneDrive\\Documents\\C-sharp\\Voyager1\\NeoGenesis\\NeoGenesis.App\\NeoGenesis.App.csproj",
       "packagesPath": "C:\\Users\\ximen\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\ximen\\OneDrive\\Documents\\C-sharp\\Voyager1\\NeoGenesis\\NeoGenesis.App\\obj\\",
+      "outputPath": "C:\\Users\\ximen\\OneDrive\\Documents\\C-sharp\\Voyager1\\NeoGenesis\\NeoGenesis.App\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

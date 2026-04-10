@@ -14,12 +14,13 @@ public class DInosaurService
 
     public void Create(Dinosaur dinosaur)
     {
+        CleanFields(dinosaur);
         ValidateFields(dinosaur);
 
-        if (repo.EmailExists(dinosaur.Email))
+        if (EmailExistsIgnoreCase(dinosaur.Email))
             throw new Exception("Email is already registered");
 
-        if (repo.UsernameExists(dinosaur.Username))
+        if (UsernameExistsIgnoreCase(dinosaur.Username))
             throw new Exception("Username is already in use");
 
         // Save
@@ -32,12 +33,15 @@ public class DInosaurService
         if (existing == null)
             throw new Exception("Dinosaur not found");
 
+        CleanFields(dinosaur);
         ValidateFields(dinosaur);
 
-        if (dinosaur.Email != existing.Email && repo.EmailExists(dinosaur.Email))
+        if (!string.Equals(dinosaur.Email, existing.Email, StringComparison.OrdinalIgnoreCase)
+            && EmailExistsIgnoreCase(dinosaur.Email))
             throw new Exception("Email is already registered");
 
-        if (dinosaur.Username != existing.Username && repo.UsernameExists(dinosaur.Username))
+        if (!string.Equals(dinosaur.Username, existing.Username, StringComparison.OrdinalIgnoreCase)
+            && UsernameExistsIgnoreCase(dinosaur.Username))
             throw new Exception("Username is already in use");
 
         // Update
@@ -47,6 +51,14 @@ public class DInosaurService
         existing.Email = dinosaur.Email;
 
         repo.Update(existing);
+    }
+
+    private void CleanFields(Dinosaur dinosaur)
+    {
+        dinosaur.FirstName = dinosaur.FirstName.Trim();
+        dinosaur.Species = dinosaur.Species.Trim();
+        dinosaur.Username = dinosaur.Username.Trim();
+        dinosaur.Email = dinosaur.Email.Trim();
     }
 
     private void ValidateFields(Dinosaur dinosaur)
@@ -69,6 +81,9 @@ public class DInosaurService
 
     private bool ValidateEmailFormat(string email)
     {
+        if (email.Contains(" "))
+            return false;
+
         int atCount = 0;
         int atPosition = -1;
 
@@ -87,7 +102,37 @@ public class DInosaurService
         if (atPosition == 0 || atPosition == email.Length - 1)
             return false;
 
+        int dotAfterAt = email.IndexOf('.', atPosition);
+        if (dotAfterAt == -1 || dotAfterAt == email.Length - 1)
+            return false;
+
         return true;
+    }
+
+    private bool EmailExistsIgnoreCase(string email)
+    {
+        List<Dinosaur> allDinosaurs = repo.GetAll();
+
+        foreach (Dinosaur d in allDinosaurs)
+        {
+            if (string.Equals(d.Email, email, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+
+        return false;
+    }
+
+    private bool UsernameExistsIgnoreCase(string username)
+    {
+        List<Dinosaur> allDinosaurs = repo.GetAll();
+
+        foreach (Dinosaur d in allDinosaurs)
+        {
+            if (string.Equals(d.Username, username, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+
+        return false;
     }
 
     public List<Dinosaur> GetAll()
