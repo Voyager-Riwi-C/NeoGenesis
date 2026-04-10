@@ -1,6 +1,6 @@
 .idea/
-**/bin/
 **/obj/
+**/bin/
 *.cache
 *.user
 *.suo
