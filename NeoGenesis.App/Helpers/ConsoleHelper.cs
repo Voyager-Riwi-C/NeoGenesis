@@ -43,13 +43,13 @@ public static class ConsoleHelper
 
     public static void ShowTitle(string title)
     {
-        Console.Clear();
+        try { Console.Clear(); } catch { }
         Console.WriteLine($"\n  ══ {title} ══\n");
     }
 
     public static void Pause()
     {
-        Console.WriteLine("\n  Press any key to continue...");
-        Console.ReadKey();
+        Console.WriteLine("\n  Press Enter to continue...");
+        try { Console.ReadKey(); } catch { Console.Read(); }
     }
 }

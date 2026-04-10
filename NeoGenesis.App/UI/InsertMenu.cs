@@ -16,31 +16,21 @@ public class InsertMenu
 
         var name             = ConsoleHelper.AskInput("Dinosaur name");
         var species          = ConsoleHelper.AskInput("Species");
-        var registrationCode = ConsoleHelper.AskInput("Registration Code");
-
-        var (isValid, error) = _service.ValidateNewDinosaur(name, species, registrationCode);
-        if (!isValid)
-        {
-            ConsoleHelper.ShowError(error);
-            ConsoleHelper.Pause();
-            return;
-        }
+        var registrationCode = ConsoleHelper.AskInput("Registration code");
 
         var ageInput = ConsoleHelper.AskInput("Age");
-        var (ageValid, ageError) = _service.ValidateAge(ageInput, out int age);
-        if (!ageValid)
+        if (!int.TryParse(ageInput, out int age))
         {
-            ConsoleHelper.ShowError(ageError);
+            ConsoleHelper.ShowError("Invalid age");
             ConsoleHelper.Pause();
             return;
         }
 
-        var dietType       = ConsoleHelper.AskOptional("Diet Type(carnivore/herbivore)");
-        var trackingDevice = ConsoleHelper.AskOptional("Tracking Device");
+        var dietType       = ConsoleHelper.AskOptional("Diet type (Carnivore/Herbivore)");
+        var trackingDevice = ConsoleHelper.AskOptional("Tracking device");
         var location       = ConsoleHelper.AskOptional("Location");
 
-        // TODO: preguntar el zone id
-        Console.Write("  Zone ID : ");
+        Console.Write("  Zone ID: ");
         int.TryParse(Console.ReadLine(), out int zoneId);
 
         var dinosaur = new Dinosaur
@@ -56,8 +46,16 @@ public class InsertMenu
             RegistrationDate = DateTime.Now
         };
 
-        // TODO: llamar _service.Add(dinosaur) cuando este el repo check 
-        ConsoleHelper.ShowSuccess($"Dinosaur '{name}' registered successfully.");
+        try
+        {
+            _service.Create(dinosaur);
+            ConsoleHelper.ShowSuccess($"Dinosaur '{name}' registered successfully.");
+        }
+        catch (Exception ex)
+        {
+            ConsoleHelper.ShowError(ex.Message);
+        }
+
         ConsoleHelper.Pause();
     }
 }
