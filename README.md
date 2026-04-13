@@ -1,4 +1,4 @@
-# NeoGenesis 🦖
+# NeoGenesis 
 
 Console application for managing genetically engineered dinosaurs in NeoGenesis Park. Built with C# (.NET 9) and Entity Framework Core with PostgreSQL.
 
