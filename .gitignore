@@ -1,0 +1,15 @@
+.idea/
+**/obj/
+**/bin/
+*.cache
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+EOF
+rider.project.model.nuget.info
+
+
+
+
+
